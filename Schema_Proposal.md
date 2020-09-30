@@ -28,10 +28,11 @@ Jack’s opponents play as constables who can investigate a node to determine wh
     * Foreign Key: Node and Turn_Investigated reference Possible_Locations
     
 ## Jack_Moves   
-This table contains a row for each of Jack’s moves. Each row contains the turn number and whether he used a special movement ability. For example, Jack could use an alley to move many nodes away from his current node. Move_Type will be an enumerated list containing `Normal`, `Carriage`, and `Alley`
+This table contains a row for each of Jack’s moves. Each row contains the turn number and whether he used a special movement ability. For example, Jack could use an alley to move many nodes away from his current node. Move_Type will be an enumerated list containing `Normal`, `Carriage`, and `Alley`. Destination Node will be the node that Jack actually ends his turn on. 
 
-  - Jack_Moves(*Turn*, Move_Type )
+  - Jack_Moves(*Turn*, Move_Type, Destination_Node )
     * Foreign Key:  Turn reference Investigations
+    * Foreign Key: Destination_Node references Connections.From_Node
     
 ## Possible_Locations 
 This table is of direct interest to the constables. It contains a row for each of Jack’s possible node locations for each turn. For example, 
