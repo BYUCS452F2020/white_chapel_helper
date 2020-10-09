@@ -9,6 +9,8 @@ public class DAO {
   // git branch (see all branch names)
   // git branch NEW_BRANCH_NAME (make a new branch called NEW_BRANCH_NAME)
   // git checkout NEW_BRANCH_NAME (switch to the branch called NEW_BRANCH_NAME)
+  // git status (shows status for your git state)
+  // git log (shows a log of all the changes that have been made. press q to exit)
 
   //TODO (func) get all possible node (ie. any node Jack could have been, ever, whole Possible_Locations table)
   //TODO return whole Connections table
