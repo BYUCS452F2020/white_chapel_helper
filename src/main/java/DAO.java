@@ -27,10 +27,8 @@ public class DAO {
   	// update DB with all possible new locations
 
   //TODO (func) create DB locally, and fill it
-  	// @Joanna is working on this on the DB branch
 
   //TODO (func) return DB connection
-  	// @Nathan is owkring on this in the conn branch
 
   //TODO (func) investigate a node, return if it has a clue and update DB
 
