@@ -16,6 +16,7 @@ public class DAO {
   //TODO return whole Connections table
   //TODO return whole Investigations table
   //TODO return whole Jack_Moves table
+    //Nate will do these functions
 
   //TODO (func) get possible nodes given turn num
 
