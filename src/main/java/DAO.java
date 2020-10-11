@@ -30,8 +30,9 @@ public class DAO {
   	// update DB with all possible new locations
 
   //TODO (func) create DB locally, and fill it
-
   //TODO (func) return DB connection
+        // Adam has started working on the above two, but doesn't mind if people make corrections/help get this stuff off the
+        // ground. :]
 
   //TODO (func) investigate a node, return if it has a clue and update DB
 
