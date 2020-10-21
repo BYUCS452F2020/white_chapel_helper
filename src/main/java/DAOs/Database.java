@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 public class Database {
     private Connection conn;
-    private Connection openConnection() throws DataAccessException {
+    public Connection openConnection() throws DataAccessException {
         try {
             //The path assumes you start in the root of your project unless given a non-relative path
             final String CONNECTION_URL = "jdbc:sqlite:White_Chapel_DB.db";
