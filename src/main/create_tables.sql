@@ -17,7 +17,7 @@ CREATE TABLE Investigations(
 	turn_investigated NUMBER  NOT NULL,
 	has_clue BOOLEAN NOT NULL,
 -- 	  I'm not sure if Booleans exist...^^
-	PRIMARY KEY (node)
+	PRIMARY KEY (node, turn_investigated)
 );
 
 CREATE TABLE Possible_Locations(
