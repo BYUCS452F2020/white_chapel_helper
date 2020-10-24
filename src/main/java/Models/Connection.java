@@ -28,6 +28,15 @@ public class Connection {
   public ConnectionType getConnectionType() {
 	return connectionType;
   }
+
+  @Override
+  public String toString() {
+	return "Connection{" +
+			"from_node=" + from_node +
+			", to_node=" + to_node +
+			", connectionType=" + connectionType +
+			'}';
+  }
 }
 
 enum ConnectionType{
