@@ -30,20 +30,14 @@ public class Jack_Move {
   public int getDest_node() {
 	return dest_node;
   }
-}
 
-enum MoveType{
-  NORM("normal"),
-  CARRIAGE("carriage"),
-  ALLEY("alley");
-
-  private final String move_type;
-
-  MoveType(String connection_type) {
-	this.move_type = connection_type;
-  }
-
-  public String getType() {
-	return move_type;
+  @Override
+  public String toString() {
+	return "Jack_Move{" +
+			"turn=" + turn +
+			", move_type=" + move_type +
+			", dest_node=" + dest_node +
+			'}';
   }
 }
+
