@@ -7,11 +7,25 @@ import java.sql.Statement;
 
 public class Database {
     private Connection conn;
-    public Connection openConnection() throws DataAccessException {
-        try {
-            //The path assumes you start in the root of your project unless given a non-relative path
-            final String CONNECTION_URL = "jdbc:sqlite:White_Chapel_DB.db";
 
+    //The path assumes you start in the root of your project unless given a non-relative path
+    final String CONNECTION_URL = "jdbc:sqlite:White_Chapel_DB.db";
+            // Joanna's URL "jdbc:sqlite:/Users/user/Documents/fall20/Database/white_chapel_helper/src/main/resources/White_Chapel_DB.db";
+
+    // a test that getting a connection works
+    public static void main(String[] args){
+        Database db = new Database();
+        try {
+            Connection conn = db.getConnection();
+            System.out.println("it worked!");
+        } catch(DataAccessException e) {
+            e.printStackTrace();
+            System.out.println(e.toString());
+        }
+    }
+
+    private Connection openConnection() throws DataAccessException {
+        try {
             // Open a database connection to the file given in the path
             conn = DriverManager.getConnection(CONNECTION_URL);
 
