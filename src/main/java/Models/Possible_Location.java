@@ -1,5 +1,7 @@
 package Models;
 
+import java.util.Objects;
+
 public class Possible_Location {
   int turn;
   int node;
@@ -15,5 +17,14 @@ public class Possible_Location {
 
   public int getNode() {
 	return node;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+	if(this == o) return true;
+	if(o == null || getClass() != o.getClass()) return false;
+	Possible_Location that = (Possible_Location) o;
+	return turn == that.turn &&
+			node == that.node;
   }
 }
