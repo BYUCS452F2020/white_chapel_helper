@@ -12,6 +12,7 @@ public class InvestigationDAO {
   public InvestigationDAO(){}
 
   public Investigation getInvestigation(int node, int turnInvestigated){
+    Boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
@@ -26,11 +27,14 @@ public class InvestigationDAO {
 
 	} catch(Exception e) {
 	  e.printStackTrace();
+	} finally {
+	  db.closeConnection(success);
 	}
 	return null;
   }
 
   public Boolean insertInvestigation(int node, int turn_investigated, Boolean hasClue){
+    Boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
@@ -41,12 +45,31 @@ public class InvestigationDAO {
 
 	  int i = ps.executeUpdate();
 	  if( i==1){
-	    return true;
+	    success = true;
+	    return success;
 	  }
 
 	} catch(DataAccessException | SQLException e) {
 	  e.printStackTrace();
+	}finally {
+	  db.closeConnection(success);
 	}
-	return false;
+	return success;
+  }
+
+  public Boolean clear(){
+	Boolean success = false;
+	try {
+	  java.sql.Connection connection = db.getConnection();
+	  PreparedStatement ps = connection.prepareStatement("DELETE FROM Investigations");
+
+	  int i1 = ps.executeUpdate();
+	  success = true;
+	} catch(DataAccessException | SQLException e) {
+	  e.printStackTrace();
+	}finally {
+	  db.closeConnection(success);
+	}
+	return success;
   }
 }

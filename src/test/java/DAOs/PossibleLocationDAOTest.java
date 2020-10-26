@@ -1,7 +1,9 @@
 package DAOs;
 
+import Models.Connection;
 import Models.Possible_Location;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -16,7 +18,13 @@ class PossibleLocationDAOTest {
   Possible_Location loc5 = new Possible_Location(2,4);
   Possible_Location loc6 = new Possible_Location(2,5);
 
-  PossibleLocationDAO dao = new PossibleLocationDAO();
+  PossibleLocationDAO dao;
+
+  @BeforeEach
+  void setup(){
+    dao = new PossibleLocationDAO();
+    dao.clear();
+  }
 
   @org.junit.jupiter.api.Test
   void insertAndGetConnection() {

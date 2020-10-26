@@ -2,13 +2,21 @@ package DAOs;
 
 import Models.Jack_Move;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 
 class JackMoveDAOTest {
+  private JackMoveDAO dao;
+  private Jack_Move jack_move;
+
+  @BeforeEach
+  void setup()throws Exception{
+    dao = new JackMoveDAO();
+    jack_move = new Jack_Move(10, 20, "carriage");
+    dao.clear();
+  }
 
   @org.junit.jupiter.api.Test
-  void insertAndGetJackMove() throws Exception {
-    JackMoveDAO dao = new JackMoveDAO();
-    Jack_Move jack_move = new Jack_Move(10, 20, "carriage");
+  void insertAndGetJackMove(){
     Boolean success = dao.insertJackMove(jack_move);
     Jack_Move extracted_move = dao.getJackMove(jack_move.getTurn());
     System.out.println(success);

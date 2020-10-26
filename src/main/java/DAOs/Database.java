@@ -47,7 +47,7 @@ public class Database {
         }
     }
 
-    public void closeConnection(boolean commit) throws DataAccessException {
+    public void closeConnection(boolean commit) {
         try {
             if (commit) {
                 //This will commit the changes to the database
@@ -62,16 +62,18 @@ public class Database {
             conn = null;
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DataAccessException("Unable to close database connection");
+            try {
+                throw new DataAccessException("Unable to close database connection");
+            } catch(DataAccessException dataAccessException) {
+                dataAccessException.printStackTrace();
+            }
         }
     }
 
-    public void clearTables() throws DataAccessException
-    {
+    public void clearTables() throws DataAccessException {
 
         try (Statement stmt = conn.createStatement()){
-            String sql = "DELETE FROM CONNECTIONS";
-            stmt.executeUpdate(sql);
+            stmt.executeUpdate("DELETE FROM CONNECTIONS");
             stmt.executeUpdate("DELETE FROM JACK_MOVES");
             stmt.executeUpdate("DELETE FROM INVESTIGATIONS");
             stmt.executeUpdate("DELETE FROM POSSIBLE_LOCATIONS");

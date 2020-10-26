@@ -11,6 +11,7 @@ public class ConnectionDAO {
   public ConnectionDAO(){}
 
   public Connection getConnection(int from, int to){
+    Boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
@@ -21,11 +22,14 @@ public class ConnectionDAO {
 	    int from_node = rs.getInt("from_node");
 	    int to_node   = rs.getInt("to_node");
 	    String conn_type = rs.getString("connection_type");
+		success = true;
 
 		return new Connection(from_node, to_node, conn_type);
 	  }
 	} catch(Exception e) {
 	  e.printStackTrace();
+	}finally {
+	  db.closeConnection(success);
 	}
 	return null;
   }
@@ -33,7 +37,8 @@ public class ConnectionDAO {
   //NOTE currently this function insert to-->from AND from --> to
   // basically, the if you can go from A to B, you should be able to go from B to A
   public Boolean insertConnection(int from, int to, String conn_type){
-	try {
+	boolean success = false;
+    try {
 	  java.sql.Connection connection = db.getConnection();
 	  PreparedStatement ps = connection.prepareStatement("INSERT INTO Connections VALUES( ?,?,?)");
 	  ps.setInt(1, from);
@@ -50,13 +55,17 @@ public class ConnectionDAO {
 	  int i2 = ps.executeUpdate();
 
 	  if( i1==1 & i2 ==1){
-	    return true;
+	    success = true;
+	    return success;
 	  }
 
 	} catch(DataAccessException | SQLException e) {
 	  e.printStackTrace();
+	  success = false;
+	} finally{
+      db.closeConnection(success);
 	}
-	return false;
+	return success;
   }
 
   public Boolean insertConnection(Connection conn){
@@ -65,20 +74,25 @@ public class ConnectionDAO {
 
   public List<Connection> getConnectionsFromNode(int node){
 	List<Connection> connecting_nodes = new ArrayList<>();
+	Boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
 	  String query = "SELECT * FROM Connections WHERE from_node = " + node;
 	  ResultSet rs = stmt.executeQuery(query);
 	  compileReturnList(connecting_nodes, rs);
+	  success = true;
 	} catch(Exception e) {
 	  e.printStackTrace();
+	} finally {
+	  db.closeConnection(success);
 	}
 	return connecting_nodes;
   }
 
   public List<Connection> getConnectionsFromNodeAndTurnType(int node, String move_type){
 	List<Connection> connecting_nodes = new ArrayList<>();
+	Boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
@@ -87,22 +101,29 @@ public class ConnectionDAO {
 	  ResultSet rs = stmt.executeQuery(query);
 
 	  compileReturnList(connecting_nodes, rs);
+	  success = true;
 	} catch(Exception e) {
 	  e.printStackTrace();
+	}finally {
+	  db.closeConnection(success);
 	}
 	return connecting_nodes;
   }
 
   public List<Connection> getMap(){
 	List<Connection> map = new ArrayList<>();
+	Boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
 	  String query = "SELECT * FROM Connections";
 	  ResultSet rs = stmt.executeQuery(query);
 	  compileReturnList(map, rs);
+	  success = true;
 	} catch(Exception e) {
 	  e.printStackTrace();
+	}finally{
+	  db.closeConnection(success);
 	}
 	return map;
   }
@@ -117,13 +138,17 @@ public class ConnectionDAO {
   }
 
   public void clear(){
+    Boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  PreparedStatement ps = connection.prepareStatement("DELETE FROM Connections");
 
 	  int i1 = ps.executeUpdate();
+	  success = true;
 	} catch(DataAccessException | SQLException e) {
 	  e.printStackTrace();
+	}finally {
+	  db.closeConnection(success);
 	}
   }
 }

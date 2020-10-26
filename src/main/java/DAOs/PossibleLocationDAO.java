@@ -13,6 +13,7 @@ public class PossibleLocationDAO {
   private final Database db = new Database();
 
   public Possible_Location getPossibleLoc(int turn, int node){
+    Boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
@@ -22,15 +23,19 @@ public class PossibleLocationDAO {
 	  if(rs.next()){
 	    turn = rs.getInt("turn");
 	    node = rs.getInt("node");
+	    success = true;
 		return new Possible_Location(turn, node);
 	  }
 	} catch(Exception e) {
 	  e.printStackTrace();
+	}finally {
+	  db.closeConnection(success);
 	}
 	return null;
   }
 
   public Boolean insertPossibleLoc(int turn, int node){
+    Boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
@@ -40,13 +45,16 @@ public class PossibleLocationDAO {
 
 	  int i = ps.executeUpdate();
 	  if( i==1){
-	    return true;
+	    success = true;
+	    return success;
 	  }
 
 	} catch(DataAccessException | SQLException e) {
 	  e.printStackTrace();
+	} finally {
+	  db.closeConnection(success);
 	}
-	return false;
+	return success;
   }
 
   public Boolean insertPossibleLoc(Possible_Location possible_location){
@@ -55,6 +63,7 @@ public class PossibleLocationDAO {
 
   public List<Possible_Location> getPossLocFromTurn(int turn){
     List<Possible_Location> possible_locations = new ArrayList<>();
+    Boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
@@ -66,14 +75,18 @@ public class PossibleLocationDAO {
 		int node_temp = rs.getInt("node");
 		possible_locations.add(new Possible_Location(turn_temp, node_temp));
 	  }
+	  success = true;
 	} catch(Exception e) {
 	  e.printStackTrace();
+	}finally {
+	  db.closeConnection(success);
 	}
 	return possible_locations;
   }
 
   public List<Possible_Location> getAllPossLoc(){
 	List<Possible_Location> possible_locations = new ArrayList<>();
+	Boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
@@ -85,9 +98,28 @@ public class PossibleLocationDAO {
 		int node_temp = rs.getInt("node");
 		possible_locations.add(new Possible_Location(turn_temp, node_temp));
 	  }
+	  success = true;
 	} catch(Exception e) {
 	  e.printStackTrace();
+	}finally {
+	  db.closeConnection(success);
 	}
 	return possible_locations;
+  }
+
+  public Boolean clear(){
+	Boolean success = false;
+	try {
+	  java.sql.Connection connection = db.getConnection();
+	  PreparedStatement ps = connection.prepareStatement("DELETE FROM Possible_Locations");
+
+	  int i1 = ps.executeUpdate();
+	  success = true;
+	} catch(DataAccessException | SQLException e) {
+	  e.printStackTrace();
+	}finally {
+	  db.closeConnection(success);
+	}
+	return success;
   }
 }

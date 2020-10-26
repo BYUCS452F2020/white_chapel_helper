@@ -2,12 +2,18 @@ package DAOs;
 
 import Models.Investigation;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 
 class InvestigationDAOTest {
 
+  InvestigationDAO dao;
+  @BeforeEach
+  void setup(){
+    dao = new InvestigationDAO();
+    dao.clear();
+  }
   @org.junit.jupiter.api.Test
   void insertAndGetConnection() {
-    InvestigationDAO dao = new InvestigationDAO();
     Boolean success = dao.insertInvestigation(1,2,true);
     Investigation investigation = dao.getInvestigation(1,2);
     System.out.println(success);

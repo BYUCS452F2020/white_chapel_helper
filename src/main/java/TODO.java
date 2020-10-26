@@ -1,5 +1,5 @@
 
-public class DAO {
+public class TODO {
   //NOTE this function accesses local SQLite DB, we may change that later
 
   // git clone ______
@@ -12,15 +12,15 @@ public class DAO {
   // git status (shows status for your git state)
   // git log (shows a log of all the changes that have been made. press q to exit)
 
-  //TODO (func) get all possible node (ie. any node Jack could have been, ever, whole Possible_Locations table)
-  //TODO return whole Connections table
+  //DONE (func) get all possible node (ie. any node Jack could have been, ever, whole Possible_Locations table)
+  //DONE return whole Connections table
   //TODO return whole Investigations table
   //TODO return whole Jack_Moves table
     //Nate will do these functions
 
-  //TODO (func) get possible nodes given turn num
+  //DONE (func) get possible nodes given turn num
 
-  //TODO (func) get all connecting nodes, given base node and turn type (road/alley)
+  //DONE (func) get all connecting nodes, given base node and turn type (road/alley)
   // Select to_node from CONN. where from_node = given and connection_type=given
 
   //TODO (func) increment turn, and add all new possible nodes to DB
@@ -30,7 +30,7 @@ public class DAO {
   	// update DB with all possible new locations
 
   //TODO (func) create DB locally, and fill it
-  //TODO (func) return DB connection
+  //DONE (func) return DB connection
         // Adam has started working on the above two, but doesn't mind if people make corrections/help get this stuff off the
         // ground. :]
 
