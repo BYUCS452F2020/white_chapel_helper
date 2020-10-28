@@ -11,7 +11,7 @@ public class JackMoveDAO {
   private Database db = new Database();
 
   public Jack_Move getJackMove(int turn){
-    Boolean success = false;
+    boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
@@ -34,8 +34,50 @@ public class JackMoveDAO {
 	return null;
   }
 
+  public int getTurn() throws Exception{
+	boolean success = false;
+	try {
+	  java.sql.Connection connection = db.getConnection();
+	  Statement stmt = connection.createStatement();
+	  String query = "SELECT MAX(turn) as current_turn FROM Jack_Moves";
+	  ResultSet rs = stmt.executeQuery(query);
+
+	  if(rs.next()){
+		int turn = rs.getInt("current_turn");
+		success = true;
+
+		return turn;
+	  }
+
+	} finally {
+	  db.closeConnection(success);
+	}
+	return -1; //should never get here
+  }
+
+  public int getCurrentJackLocation() throws Exception {
+	boolean success = false;
+	try {
+	  java.sql.Connection connection = db.getConnection();
+	  Statement stmt = connection.createStatement();
+	  String query = "SELECT MAX(turn) as turn, destination_node FROM Jack_Moves";
+	  ResultSet rs = stmt.executeQuery(query);
+
+	  if(rs.next()){
+		int dest_node = rs.getInt("destination_node");
+		success = true;
+
+		return dest_node;
+	  }
+
+	} finally {
+	  db.closeConnection(success);
+	}
+	return -1; //should never get here
+  }
+
   public Boolean insertJackMove(int turn, int dest_node, String move_type){
-    Boolean success = false;
+    boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
@@ -63,7 +105,7 @@ public class JackMoveDAO {
   }
 
   public Boolean clear(){
-	Boolean success = false;
+	boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  PreparedStatement ps = connection.prepareStatement("DELETE FROM Jack_Moves");
