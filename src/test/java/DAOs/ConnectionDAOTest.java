@@ -80,4 +80,10 @@ class ConnectionDAOTest {
     Assertions.assertEquals(3, from_one.toArray().length);
     Assertions.assertEquals(2, from_five.toArray().length);
   }
+
+  @Test
+  void isValidNode() {
+    Assertions.assertTrue(dao.isValidNode(1));
+    Assertions.assertFalse(dao.isValidNode(99));
+  }
 }

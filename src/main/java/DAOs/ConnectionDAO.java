@@ -35,6 +35,23 @@ public class ConnectionDAO {
 	return null;
   }
 
+  public boolean isValidNode(int node){
+	boolean success = false;
+	try {
+	  java.sql.Connection connection = db.getConnection();
+	  Statement stmt = connection.createStatement();
+	  String query = "SELECT * FROM Connections WHERE from_node= " + node;
+	  ResultSet rs = stmt.executeQuery(query);
+
+	  return rs.next();
+	} catch(Exception e) {
+	  e.printStackTrace();
+	}finally {
+	  db.closeConnection(success);
+	}
+	return false;
+  }
+
   //NOTE currently this function insert to-->from AND from --> to
   // basically, the if you can go from A to B, you should be able to go from B to A
   public Boolean insertConnection(int from, int to, String conn_type){
