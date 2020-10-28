@@ -30,7 +30,7 @@ public class BoardService {
             new Connection(100,85, "STREET"),
             new Connection(100,122, "STREET"),
             new Connection(100,123, "STREET"),
-            new Connection(199,124, "STREET"),
+            new Connection(100,124, "STREET"),
             new Connection(100,125, "STREET"),
 
             new Connection(122,123, "STREET"),
