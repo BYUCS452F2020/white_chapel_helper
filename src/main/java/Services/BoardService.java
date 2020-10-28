@@ -1,6 +1,8 @@
 package Services;
 
 import DAOs.ConnectionDAO;
+import DAOs.DataAccessException;
+import DAOs.Database;
 import Models.Connection;
 
 import java.util.Arrays;
@@ -15,6 +17,7 @@ public class BoardService {
 
   //loads medium-sized map into DB, 1 neighborhood of game board
   public void loadDummyDataModerate() throws Exception {
+    clearDB();
     ConnectionDAO dao = new ConnectionDAO();
     List<Connection> map = Arrays.asList(
             new Connection(120,99, "STREET"),
@@ -53,6 +56,7 @@ public class BoardService {
             new Connection(124,126, "STREET"),
             new Connection(124,101, "STREET"),
 
+            new Connection(125,102, "STREET"),
             new Connection(125,126, "STREET"),
             new Connection(125,101, "STREET"),
             new Connection(125,143, "STREET"),
@@ -252,7 +256,7 @@ public class BoardService {
             new Connection(109,111, "STREET"),
 
             new Connection(110,111, "STREET"));
-    System.out.println("loading " + map.size() + " connections into DB");
+//    System.out.println("loading " + map.size() + " connections into DB");
     for(Connection temp: map){
       dao.insertConnection(temp);
     }
@@ -261,5 +265,12 @@ public class BoardService {
   //loads full white chapel map into DB
   public void loadData(){
     //TODO
+  }
+
+  private void clearDB() throws DataAccessException {
+    Database db = new Database();
+    db.getConnection();
+    db.clearTables();
+    db.closeConnection(true);
   }
 }
