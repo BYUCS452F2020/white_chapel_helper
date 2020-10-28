@@ -27,4 +27,8 @@ public class Possible_Location {
 	return turn == that.turn &&
 			node == that.node;
   }
+
+  public String toString(){
+      return "turn = " + turn + " node = " + node + "\n";
+  }
 }

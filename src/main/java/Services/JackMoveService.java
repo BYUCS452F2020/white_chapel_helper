@@ -1,6 +1,13 @@
 package Services;
 
+import DAOs.JackMoveDAO;
+import DAOs.PossibleLocationDAO;
+import Models.MoveType;
+
 public class JackMoveService {
+
+  PossibleLocationDAO locations_dao =  new PossibleLocationDAO();
+  JackMoveDAO jack_move_dao = new JackMoveDAO();
 
   public void jackMovesRandom(){
     //TODO
@@ -19,6 +26,10 @@ public class JackMoveService {
   }
 
   public void setJackStartNode(int start){
-    //TODO
+
+    //I gave the start node a connection type of street, shouldn't matter though -Nate
+    jack_move_dao.insertJackMove(0, start, "normal");
+    locations_dao.insertPossibleLoc(0, start);
+
   }
 }
