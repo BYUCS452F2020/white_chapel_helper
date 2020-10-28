@@ -10,6 +10,9 @@ public class Database {
 
     //The path assumes you start in the root of your project unless given a non-relative path
     final String CONNECTION_URL = "jdbc:sqlite:White_Chapel_DB.db";
+            // Nathan's URL:
+            //"jdbc:sqlite:/Users/ngill/Documents/GitHub/white_chapel_helper/DB_files/White_Chapel_DB.db";
+
             // Joanna's URL "jdbc:sqlite:/Users/user/Documents/fall20/Database/white_chapel_helper/src/main/resources/White_Chapel_DB.db";
 
     // a test that getting a connection works
