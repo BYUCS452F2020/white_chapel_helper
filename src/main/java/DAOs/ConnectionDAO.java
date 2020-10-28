@@ -1,6 +1,7 @@
 package DAOs;
 
 import Models.Connection;
+import org.sqlite.SQLiteException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public class ConnectionDAO {
   public ConnectionDAO(){}
 
   public Connection getConnection(int from, int to){
-    Boolean success = false;
+    boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
@@ -59,10 +60,15 @@ public class ConnectionDAO {
 	    return success;
 	  }
 
-	} catch(DataAccessException | SQLException e) {
+	} catch(DataAccessException e) {
 	  e.printStackTrace();
 	  success = false;
-	} finally{
+	} catch(SQLException e){
+      if(e.getMessage().contains("Abort due to constraint violation (UNIQUE constraint failed:")){
+        success = true;
+        return success;
+	  }
+	}finally{
       db.closeConnection(success);
 	}
 	return success;
@@ -74,7 +80,7 @@ public class ConnectionDAO {
 
   public List<Connection> getConnectionsFromNode(int node){
 	List<Connection> connecting_nodes = new ArrayList<>();
-	Boolean success = false;
+	boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
@@ -92,7 +98,7 @@ public class ConnectionDAO {
 
   public List<Connection> getConnectionsFromNodeAndTurnType(int node, String move_type){
 	List<Connection> connecting_nodes = new ArrayList<>();
-	Boolean success = false;
+	boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
@@ -112,7 +118,7 @@ public class ConnectionDAO {
 
   public List<Connection> getMap(){
 	List<Connection> map = new ArrayList<>();
-	Boolean success = false;
+	boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  Statement stmt = connection.createStatement();
@@ -138,7 +144,7 @@ public class ConnectionDAO {
   }
 
   public void clear(){
-    Boolean success = false;
+    boolean success = false;
 	try {
 	  java.sql.Connection connection = db.getConnection();
 	  PreparedStatement ps = connection.prepareStatement("DELETE FROM Connections");

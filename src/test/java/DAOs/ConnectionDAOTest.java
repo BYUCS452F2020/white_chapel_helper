@@ -43,11 +43,17 @@ class ConnectionDAOTest {
   void insertAndGetConnection() {
     Boolean success = dao.insertConnection(10,2,"street");
     Connection conn = dao.getConnection(10,2);
-    System.out.println(success);
+    Connection conn_reverse = dao.getConnection(2,10);
+
     System.out.println(conn.toString());
+    System.out.println(conn_reverse.toString());
+
     Assertions.assertEquals(true, success);
     Assertions.assertEquals(10, conn.getFrom_node());
     Assertions.assertEquals(2, conn.getTo_node());
+
+    Assertions.assertEquals(2, conn_reverse.getFrom_node());
+    Assertions.assertEquals(10, conn_reverse.getTo_node());
   }
 
   @Test
