@@ -14,6 +14,7 @@ public class Database {
             //"jdbc:sqlite:/Users/ngill/Documents/GitHub/white_chapel_helper/DB_files/White_Chapel_DB.db";
 
             // Joanna's URL "jdbc:sqlite:/Users/user/Documents/fall20/Database/white_chapel_helper/src/main/resources/White_Chapel_DB.db";
+            // Adam's URL "jdbc:sqlite:/Users/User/Documents/School/2020_Fall/Project/White_Chapel_DB.db";
 
     // a test that getting a connection works
     public static void main(String[] args){

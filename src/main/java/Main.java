@@ -20,16 +20,18 @@ public class Main {
 
     String game_type = null;
     int node = 0;
+    boolean jackWins = false;
 
     setGameType(game_type, in);
     setJackStartNode(node, in);
 
     System.out.println("\n");
-    for(int turn=1; turn < 15; turn++){
+    for(int turn=1; turn < 15 && !jackWins; turn++){
       System.out.println("Turn " + turn);
-      jackMoves(node, in);
-      printPossLoc(turn);
+      jackWins = jackMoves(node, in);
+      if (!jackWins) printPossLoc(turn);
     }
+    System.out.println("No more turns: constables win this round!");
     System.out.println("Thanks for playing!");
   }
 
@@ -62,19 +64,37 @@ public class Main {
     }
   }
 
-  private static void jackMoves(int node, Scanner in){
+  private static boolean jackMoves(int node, Scanner in){
     boolean waiting = true;
+    boolean jackWins = false;
     JackMoveService jackMoveService = new JackMoveService();
     while(waiting) {
       System.out.println("Where does Jack move?");
       node = in.nextInt();
+      in.nextLine();
       try {
         jackMoveService.jackMoves(node, "normal");
         waiting = false;
+
+        boolean gotResponse = false;
+        String winStatus;
+        while (!gotResponse) {
+          System.out.println("Is Jack at his lair? (Y/N)");
+          winStatus = in.nextLine();
+          if (winStatus.equalsIgnoreCase("Y")) {
+            System.out.println("Jack wins this round!");
+            jackWins = true;
+            gotResponse = true;
+          }
+          else if (winStatus.equalsIgnoreCase("N")) gotResponse = true;
+          else System.out.println("Please enter \"Y\" or \"N\"");
+        }
+
       } catch(Exception e) {
         System.out.println("Invalid move. Try Again");
       }
     }
+    return jackWins;
   }
 
   private static void printPossLoc(int turn){
