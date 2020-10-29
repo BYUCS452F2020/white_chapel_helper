@@ -26,12 +26,12 @@ public class Main {
     setJackStartNode(node, in);
 
     System.out.println("\n");
-    for(int turn=1; turn < 15 && !jackWins; turn++){
+    for(int turn=1; turn <= 15 && !jackWins; turn++){
       System.out.println("Turn " + turn);
-      jackWins = jackMoves(node, in);
-      if (!jackWins) printPossLoc(turn);
+      jackWins = jackMoves(node, in); // Moves Jack, checks to see whether Jack has reached his lair
+      if(!jackWins && turn < 15) printPossLoc(turn); // If Jack hasn't reached his lair by the final turn, constables win
     }
-    System.out.println("No more turns: constables win this round!");
+    if(!jackWins) System.out.println("No more turns: constables win this round!");
     System.out.println("Thanks for playing!");
   }
 
@@ -75,21 +75,7 @@ public class Main {
       try {
         jackMoveService.jackMoves(node, "normal");
         waiting = false;
-
-        boolean gotResponse = false;
-        String winStatus;
-        while (!gotResponse) {
-          System.out.println("Is Jack at his lair? (Y/N)");
-          winStatus = in.nextLine();
-          if (winStatus.equalsIgnoreCase("Y")) {
-            System.out.println("Jack wins this round!");
-            jackWins = true;
-            gotResponse = true;
-          }
-          else if (winStatus.equalsIgnoreCase("N")) gotResponse = true;
-          else System.out.println("Please enter \"Y\" or \"N\"");
-        }
-
+        jackWins = jackAtLair(in);
       } catch(Exception e) {
         System.out.println("Invalid move. Try Again");
       }
@@ -109,5 +95,23 @@ public class Main {
 
     System.out.println("Jack could be at any of these nodes...");
     System.out.println(sb.toString());
+  }
+
+  private static boolean jackAtLair(Scanner in) {
+    boolean jackWins = false;
+    boolean gotResponse = false;
+    String winStatus;
+    while (!gotResponse) {
+      System.out.println("Is Jack at his lair? (Y/N)");
+      winStatus = in.nextLine();
+      if (winStatus.equalsIgnoreCase("Y")) {
+        System.out.println("Jack wins this round!");
+        jackWins = true;
+        gotResponse = true;
+      }
+      else if (winStatus.equalsIgnoreCase("N")) gotResponse = true;
+      else System.out.println("Please enter \"Y\" or \"N\"");
+    }
+    return jackWins;
   }
 }
