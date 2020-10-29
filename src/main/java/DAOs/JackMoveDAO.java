@@ -48,8 +48,8 @@ public class JackMoveDAO {
 
 			if(rs.next()){
 				jackVisited = true;
-				success = true;
 			}
+			success = true;
 
 		} catch(Exception e) {
 			e.printStackTrace();

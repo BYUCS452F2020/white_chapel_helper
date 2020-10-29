@@ -107,6 +107,31 @@ public class PossibleLocationDAO {
 	return possible_locations;
   }
 
+  public int getSoonestReached(int node){
+	  int turn_num = -1;
+	  Boolean success = false;
+  	try {
+  		java.sql.Connection connection = db.getConnection();
+  		Statement stmt = connection.createStatement();
+  		String query = "SELECT min(turn) as earliest_turn FROM Possible_Locations where node = " + node ;
+  		ResultSet rs = stmt.executeQuery(query);
+
+  		if(rs.next()){
+  			turn_num = rs.getInt("earliest_turn");
+			turn_num = rs.wasNull() ? -1 : turn_num;
+  		}
+  		success = true;
+
+  	} catch(Exception e) {
+  		e.printStackTrace();
+  	}finally {
+  		db.closeConnection(success);
+  	}
+  	return turn_num;
+  }
+
+
+
   public Boolean clear(){
 	Boolean success = false;
 	try {

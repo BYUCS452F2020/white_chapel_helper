@@ -60,6 +60,8 @@ public class PossibleLocationService {
 
   // a player has investigated a node, update the PossibleLocations table
   public void investigatedUpdateTable(Investigation investigation){
+
+
     //TODO
   }
 

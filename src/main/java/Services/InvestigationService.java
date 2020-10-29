@@ -9,13 +9,14 @@ public class InvestigationService {
   // return if Jack has been to that node
   // update DB with investigation data
 
+  JackMoveDAO moveDAO = new JackMoveDAO();
+  InvestigationDAO investigationDAO = new InvestigationDAO();
+  
   public Boolean investigate(int node, int turn){
     boolean jackVisited = false;
-    JackMoveDAO jmd = new JackMoveDAO();
-    InvestigationDAO invd = new InvestigationDAO();
 
-    jackVisited = jmd.jackWasHere(node);
-    invd.insertInvestigation(node, turn, jackVisited);
+    jackVisited = moveDAO.jackWasHere(node);
+    investigationDAO.insertInvestigation(node, turn, jackVisited);
 
     return jackVisited;
   }

@@ -52,6 +52,19 @@ class PossibleLocationDAOTest {
   }
 
   @Test
+  void getMinDistance(){
+    loadTable();
+    int node1min = dao.getSoonestReached(1);
+    int node3min = dao.getSoonestReached(3);
+    int node5min = dao.getSoonestReached(5);
+    int nodeFailed = dao.getSoonestReached(8);
+    Assertions.assertEquals(1, node1min);
+    Assertions.assertEquals(1, node3min);
+    Assertions.assertEquals(2, node5min);
+    Assertions.assertEquals(-1, nodeFailed);
+  }
+
+  @Test
   void getLocFromTurn(){
     loadTable();
     List<Possible_Location> possLoc = dao.getPossLocFromTurn(2);
