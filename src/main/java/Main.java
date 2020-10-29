@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class Main {
   private int turn = 0;
+
   public static void main(String[] args) throws Exception {
 	// TODO setup the code to actually play a game
 	// should call only the service classes

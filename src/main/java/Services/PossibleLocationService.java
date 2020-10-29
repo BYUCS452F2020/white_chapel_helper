@@ -16,6 +16,8 @@ public class PossibleLocationService {
   //JackMoveService jack_moves = new JackMoveService();
   PossibleLocationDAO locationDAO = new PossibleLocationDAO();
   ConnectionDAO connectionDAO = new ConnectionDAO();
+  int start_turn;
+  int start_node;
 
   // Jack has moved, update the PossibleLocationTable to include all possible nodes for this new turn
   //turn parameter is the CURRENT turn, there should be no possible locations for the CURRENT turn...yet
@@ -60,7 +62,13 @@ public class PossibleLocationService {
 
   // a player has investigated a node, update the PossibleLocations table
   public void investigatedUpdateTable(Investigation investigation){
+    // If the node has a clue, check that node's "Soonest reached" value.
+    //   - If greater than start_turn, set start_turn to soonest_reached and start_node to investigated node
 
+    // If the node does not have a clue, start_turn and start_node are not affected.
+    //   1. Clear PossibleLocations
+    //   2. Beginning with start_node and start_turn, add nodes while turn_iter <= current_turn
+    //      - Ignore nodes which had no clue on a turn greater than turn_iter
 
     //TODO
   }

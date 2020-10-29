@@ -56,6 +56,30 @@ public class InvestigationDAO {
 	return success;
   }
 
+  public Boolean couldHaveVisited(int node, int turn) {
+  	// Determine whether a node has been found without a clue on a later turn.
+	  boolean success = false;
+	  try {
+		  java.sql.Connection connection = db.getConnection();
+		  Statement stmt = connection.createStatement();
+		  String query = "SELECT * FROM Investigations WHERE node= " + node +
+				         " and turn_investigated > " + turn +
+				  		 " and has_clue = 0";
+		  ResultSet rs = stmt.executeQuery(query);
+
+		  if(rs.next()){
+			  return false; // If there is a result, then the node had no clue on a later turn
+		  }
+		  success = true;
+
+	  } catch(Exception e) {
+		  e.printStackTrace();
+	  } finally {
+		  db.closeConnection(success);
+	  }
+  	return true;
+  }
+
   public Boolean clear(){
 	Boolean success = false;
 	try {
