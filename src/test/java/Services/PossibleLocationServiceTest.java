@@ -47,7 +47,7 @@ public class PossibleLocationServiceTest {
     }
 
     @Test
-    void test_updated_locations1(){
+    void test_updated_locations1() throws Exception {
         jack_dao.clear();
         locations_dao.clear();
         jack_moves.setJackStartNode(1);
@@ -55,15 +55,15 @@ public class PossibleLocationServiceTest {
         locations_service.jackMovedUpdateTable(2, "street");
         locations_service.jackMovedUpdateTable(3, "street");
         String test = locations_dao.getAllPossLoc().toString();
+        System.out.println(test);
 
         Assertions.assertNotNull(locations_dao.getPossibleLoc(2, 1));
         Assertions.assertNotNull(locations_dao.getPossibleLoc(1, 3));
         Assertions.assertNotNull(locations_dao.getPossibleLoc(3, 5));
-
     }
 
     @Test
-    void test_updated_locationes_alley(){
+    void test_updated_locationes_alley() throws Exception {
         jack_dao.clear();
         locations_dao.clear();
         jack_moves.setJackStartNode(1);

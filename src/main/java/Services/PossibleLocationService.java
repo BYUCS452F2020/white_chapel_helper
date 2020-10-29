@@ -62,4 +62,12 @@ public class PossibleLocationService {
   public void investigatedUpdateTable(Investigation investigation){
     //TODO
   }
+
+  public List<Possible_Location> getAllLocByTurn(int turn){
+    return locationDAO.getPossLocFromTurn(turn);
+  }
+
+  public List<Possible_Location> getAllLoc(){
+    return locationDAO.getAllPossLoc();
+  }
 }
