@@ -34,6 +34,31 @@ public class JackMoveDAO {
 	return null;
   }
 
+	public Boolean jackWasHere(int node){
+		// Select all from JackMove table where dest_node = node;
+		// If null return false
+		// Else return true.
+		boolean jackVisited = false;
+		boolean success = false;
+		try {
+			java.sql.Connection connection = db.getConnection();
+			Statement stmt = connection.createStatement();
+			String query = "SELECT * FROM Jack_Moves WHERE dest_node= " + node;
+			ResultSet rs = stmt.executeQuery(query);
+
+			if(rs.next()){
+				jackVisited = true;
+				success = true;
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			db.closeConnection(success);
+		}
+		return jackVisited;
+	}
+
   public int getTurn() throws Exception{
 	boolean success = false;
 	try {
