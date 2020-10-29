@@ -43,7 +43,7 @@ public class JackMoveDAO {
 		try {
 			java.sql.Connection connection = db.getConnection();
 			Statement stmt = connection.createStatement();
-			String query = "SELECT * FROM Jack_Moves WHERE dest_node= " + node;
+			String query = "SELECT * FROM Jack_Moves WHERE destination_node= " + node;
 			ResultSet rs = stmt.executeQuery(query);
 
 			if(rs.next()){

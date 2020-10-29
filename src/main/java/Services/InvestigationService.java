@@ -1,4 +1,7 @@
 package Services;
+import DAOs.Database;
+import DAOs.JackMoveDAO;
+import DAOs.InvestigationDAO;
 
 public class InvestigationService {
 
@@ -7,6 +10,13 @@ public class InvestigationService {
   // update DB with investigation data
 
   public Boolean investigate(int node, int turn){
-    return true; //TODO
+    boolean jackVisited = false;
+    JackMoveDAO jmd = new JackMoveDAO();
+    InvestigationDAO invd = new InvestigationDAO();
+
+    jackVisited = jmd.jackWasHere(node);
+    invd.insertInvestigation(node, turn, jackVisited);
+
+    return jackVisited;
   }
 }

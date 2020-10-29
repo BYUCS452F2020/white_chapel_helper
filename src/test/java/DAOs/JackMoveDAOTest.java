@@ -3,6 +3,7 @@ package DAOs;
 import Models.Jack_Move;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class JackMoveDAOTest {
   private JackMoveDAO dao;
@@ -25,5 +26,17 @@ class JackMoveDAOTest {
     Assertions.assertEquals(10, jack_move.getTurn());
     Assertions.assertEquals(20, jack_move.getDest_node());
     Assertions.assertEquals("carriage", jack_move.getMove_type().toString());
+  }
+
+  @Test
+  void checkForJackVisited() {
+    Boolean success = dao.insertJackMove(jack_move);
+    Boolean hasVisitedTrue = dao.jackWasHere(20);
+    System.out.println(hasVisitedTrue);
+    Boolean hasVisitedFalse = dao.jackWasHere(15);
+    System.out.println(hasVisitedFalse);
+    Assertions.assertEquals(true, success);
+    Assertions.assertEquals(true, hasVisitedTrue);
+    Assertions.assertEquals(false, hasVisitedFalse);
   }
 }
