@@ -24,7 +24,7 @@ public class JackMoveServiceTest {
     }
 
     @Test
-    void test_start_node(){
+    void test_start_node()throws Exception{
         jack_move_service.setJackStartNode(3);
 
         Assertions.assertNotNull(jack_move_DAO.getJackMove(0));
@@ -40,9 +40,7 @@ public class JackMoveServiceTest {
         boardService.loadDummyDataModerate();
         jack_move_service.setJackStartNode(100);
 
-        Assertions.assertThrows(Exception.class, () -> {
-            jack_move_service.jackMoves(1, "street");
-        });
+        Assertions.assertThrows(Exception.class, () -> jack_move_service.jackMoves(1, "street"));
 
         jack_move_service.jackMoves(125, "street");
         List<Possible_Location> poss_loc = locations_dao.getAllPossLoc();

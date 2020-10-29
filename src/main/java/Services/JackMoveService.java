@@ -1,5 +1,6 @@
 package Services;
 
+import DAOs.ConnectionDAO;
 import DAOs.JackMoveDAO;
 import DAOs.PossibleLocationDAO;
 import Models.MoveType;
@@ -9,6 +10,7 @@ public class JackMoveService {
   PossibleLocationDAO locations_dao =  new PossibleLocationDAO();
   JackMoveDAO jack_move_dao = new JackMoveDAO();
   ConnectionService connectionService = new ConnectionService();
+  ConnectionDAO connectionDAO = new ConnectionDAO();
 
   public void jackMovesRandom(){
     //TODO
@@ -20,12 +22,12 @@ public class JackMoveService {
     int current_turn = jack_move_dao.getTurn();
     current_turn ++;
 
-    if(connectionService.isValidMove(current_node, destination, move_type)){
+    if(connectionService.isValidMove(current_node, destination, "street")){
       jack_move_dao.insertJackMove(current_turn, destination, move_type);
     }else{
       throw new Exception("Invalid Move");
     }
-    possibleLocationService.jackMovedUpdateTable(current_turn, move_type);
+    possibleLocationService.jackMovedUpdateTable(current_turn, "street");
   }
 
   public int getNumAlleysUsed(){
@@ -36,11 +38,13 @@ public class JackMoveService {
     return 1; //TODO
   }
 
-  public void setJackStartNode(int start){
-
-    //I gave the start node a connection type of street, shouldn't matter though -Nate
-    jack_move_dao.insertJackMove(0, start, "normal");
-    locations_dao.insertPossibleLoc(0, start);
-
+  public void setJackStartNode(int start) throws Exception {
+    if(connectionDAO.isValidNode(start)){
+      //I gave the start node a connection type of street, shouldn't matter though -Nate
+      jack_move_dao.insertJackMove(0, start, "normal");
+      locations_dao.insertPossibleLoc(0, start);
+    }else{
+      throw new Exception("invalid node");
+    }
   }
 }
