@@ -7,7 +7,6 @@ import java.util.Scanner;
 public class Main {
 
   public static void main(String[] args) throws Exception {
-	// TODO setup the code to actually play a game
 	// should call only the service classes
     Scanner in = new Scanner(System.in);
     BoardService boardService = new BoardService();
@@ -16,11 +15,11 @@ public class Main {
     System.out.println("                            Welcome to your Letters from White Chapel Assistant                        ");
     System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
 
-    String game_type = null;
+    String game_type = "control";
     int node = 0;
     boolean jackWins = false;
 
-    setGameType(game_type, in);
+//    setGameType(game_type, in);
     setJackStartNode(node, in);
     int lair = setJackLair(in);
 
@@ -28,13 +27,15 @@ public class Main {
     for(int turn=1; turn <= 15 && !jackWins; turn++){
       System.out.println("Turn " + turn);
       jackWins = jackMoves(node, in, lair); // Moves Jack, checks to see whether Jack has reached his lair
-      if(!jackWins && turn < 15) {
+      if(!jackWins) {
         printPossLoc(turn); // If Jack hasn't reached his lair by the final turn, constables win
         conductInvestigations(turn, in);
       }
     }
-    if(!jackWins) System.out.println("No more turns: constables win this round!");
-    System.out.println("Thanks for playing!");
+    if(!jackWins) System.out.println("No more turns: constables win this round!\n Thanks for playing");
+    else{
+      System.out.println("Thanks for slaying!");
+    }
   }
 
   private static int setJackLair(Scanner in) {
@@ -42,12 +43,13 @@ public class Main {
     int node = 0;
     while(waiting_for_input) {
       System.out.println("What node is Jack's lair?");
-      node = in.nextInt();
+      String temp = in.nextLine();
       try {
+        node = Integer.parseInt(temp);
         ConnectionService service = new ConnectionService();
         waiting_for_input = !service.isValidNode(node);
       }catch(Exception e){
-        System.out.println("Node: " + node  + " does not exist. Try again");
+        System.out.println("Node " + temp  + " does not exist. Try again");
       }
     }
     return node;
@@ -71,13 +73,14 @@ public class Main {
     boolean waiting_for_input = true;
     while(waiting_for_input) {
       System.out.println("What node does Jack start on?");
-      node = in.nextInt();
+      String temp = in.nextLine();
       try {
+        node = Integer.parseInt(temp);
         JackMoveService jackMoveService = new JackMoveService();
         jackMoveService.setJackStartNode(node);
         waiting_for_input = false;
       }catch(Exception e){
-        System.out.println("Node: " + node  + " does not exist. Try again");
+        System.out.println("Node " + temp + " does not exist. Try again");
       }
     }
   }
@@ -88,9 +91,9 @@ public class Main {
     JackMoveService jackMoveService = new JackMoveService();
     while(waiting) {
       System.out.println("Where does Jack move?");
-      node = in.nextInt();
-      in.nextLine();
+      String temp = in.nextLine();
       try {
+        node = Integer.parseInt(temp);
         jackMoveService.jackMoves(node, "normal");
         waiting = false;
         jackWins = jackAtLair(lair, node);
@@ -115,24 +118,6 @@ public class Main {
     System.out.println(sb.toString());
   }
 
-  private static boolean jackAtLair(Scanner in) {
-    boolean jackWins = false;
-    boolean gotResponse = false;
-    String winStatus;
-    while (!gotResponse) {
-      System.out.println("Is Jack at his lair? (Y/N)");
-      winStatus = in.nextLine();
-      if (winStatus.equalsIgnoreCase("Y")) {
-        System.out.println("Jack wins this round!");
-        jackWins = true;
-        gotResponse = true;
-      }
-      else if (winStatus.equalsIgnoreCase("N")) gotResponse = true;
-      else System.out.println("Please enter \"Y\" or \"N\"");
-    }
-    return jackWins;
-  }
-
   private static boolean jackAtLair(int lair, int loc) {
     if(lair == loc){
       System.out.println("Jack wins this round!");
@@ -140,29 +125,42 @@ public class Main {
     return lair == loc;
   }
 
+  private static boolean wouldYouLikeToInvestigate(Scanner in){
+    boolean waiting = true;
+    String response;
+    while(waiting){
+      System.out.println("Would you like to investigate a node? (Y/N)");
+      response = in.nextLine();
+
+      if(response.equalsIgnoreCase("n")){
+        return true;
+      }
+      else if(response.equalsIgnoreCase("y")){
+        return false;
+      }else{
+          System.out.println("Please enter \"Y\" or \"N\"");
+      }
+    }
+    return true;
+  }
+
   private static void conductInvestigations(int turn, Scanner in) {
     InvestigationService IService = new InvestigationService();
-    System.out.println("Would you like to investigate a node? (Y/N)");
-    String response = in.nextLine();
-    int invNode;
-    boolean jackWasHere = false;
-
-    boolean passTurn = false;
-    if(response.equalsIgnoreCase("n")) passTurn = true;
-    else if(!response.equalsIgnoreCase("y")) System.out.println("Please enter \"Y\" or \"N\"");
+    boolean passTurn = wouldYouLikeToInvestigate(in); //passTurn updated in this func
 
     while (!passTurn) {
       System.out.println("Which node will you investigate?");
-      invNode = in.nextInt();
-      in.nextLine();
-      jackWasHere = IService.investigate(invNode, turn);
-      if (jackWasHere) System.out.println("A clue was found! Recorded in database.");
-      else System.out.println("No clue found. Recorded in database.");
+      String temp = in.nextLine();
+      try {
+        int invNode = Integer.parseInt(temp);
+        boolean jackWasHere = IService.investigate(invNode, turn);
+        if(jackWasHere) System.out.println("A clue was found! Recorded in database.");
+        else System.out.println("No clue found. Recorded in database.");
 
-      System.out.println("Would you like to investigate again? (Y/N)");
-      response = in.nextLine();
-      if(response.equalsIgnoreCase("n")) passTurn = true;
-      else if(!response.equalsIgnoreCase("y")) System.out.println("Please enter \"Y\" or \"N\"");
+        passTurn = wouldYouLikeToInvestigate(in);
+      }catch(Exception e){
+        System.out.println("Node " + temp + " does not exist. Try again.");
+      }
     }
 
   }
