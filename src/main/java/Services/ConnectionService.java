@@ -1,5 +1,6 @@
 package Services;
 
+import DAOs.ConnectionDAO;
 import DAOs.Database;
 import Models.Connection;
 
@@ -44,6 +45,11 @@ public class ConnectionService {
     }
     return valid_move;
 
+  }
+
+  public boolean isValidNode(int node){
+    ConnectionDAO dao = new ConnectionDAO();
+    return dao.isValidNode(node);
   }
 
   public List<Connection> getShortestPath(int starting, int destination){

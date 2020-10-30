@@ -1,14 +1,10 @@
 import Models.Possible_Location;
-import Services.BoardService;
-import Services.JackMoveService;
-import Services.PossibleLocationService;
-import Services.InvestigationService;
+import Services.*;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-  private int turn = 0;
 
   public static void main(String[] args) throws Exception {
 	// TODO setup the code to actually play a game
@@ -26,11 +22,12 @@ public class Main {
 
     setGameType(game_type, in);
     setJackStartNode(node, in);
+    int lair = setJackLair(in);
 
     System.out.println("\n");
     for(int turn=1; turn <= 15 && !jackWins; turn++){
       System.out.println("Turn " + turn);
-      jackWins = jackMoves(node, in); // Moves Jack, checks to see whether Jack has reached his lair
+      jackWins = jackMoves(node, in, lair); // Moves Jack, checks to see whether Jack has reached his lair
       if(!jackWins && turn < 15) {
         printPossLoc(turn); // If Jack hasn't reached his lair by the final turn, constables win
         conductInvestigations(turn, in);
@@ -38,6 +35,22 @@ public class Main {
     }
     if(!jackWins) System.out.println("No more turns: constables win this round!");
     System.out.println("Thanks for playing!");
+  }
+
+  private static int setJackLair(Scanner in) {
+    boolean waiting_for_input = true;
+    int node = 0;
+    while(waiting_for_input) {
+      System.out.println("What node is Jack's lair?");
+      node = in.nextInt();
+      try {
+        ConnectionService service = new ConnectionService();
+        waiting_for_input = !service.isValidNode(node);
+      }catch(Exception e){
+        System.out.println("Node: " + node  + " does not exist. Try again");
+      }
+    }
+    return node;
   }
 
   private static void setGameType(String game_type, Scanner in){
@@ -69,7 +82,7 @@ public class Main {
     }
   }
 
-  private static boolean jackMoves(int node, Scanner in){
+  private static boolean jackMoves(int node, Scanner in, int lair){
     boolean waiting = true;
     boolean jackWins = false;
     JackMoveService jackMoveService = new JackMoveService();
@@ -80,7 +93,7 @@ public class Main {
       try {
         jackMoveService.jackMoves(node, "normal");
         waiting = false;
-        jackWins = jackAtLair(in);
+        jackWins = jackAtLair(lair, node);
       } catch(Exception e) {
         System.out.println("Invalid move. Try Again");
       }
@@ -118,6 +131,13 @@ public class Main {
       else System.out.println("Please enter \"Y\" or \"N\"");
     }
     return jackWins;
+  }
+
+  private static boolean jackAtLair(int lair, int loc) {
+    if(lair == loc){
+      System.out.println("Jack wins this round!");
+    }
+    return lair == loc;
   }
 
   private static void conductInvestigations(int turn, Scanner in) {
