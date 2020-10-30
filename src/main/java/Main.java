@@ -2,6 +2,7 @@ import Models.Possible_Location;
 import Services.BoardService;
 import Services.JackMoveService;
 import Services.PossibleLocationService;
+import Services.InvestigationService;
 
 import java.util.List;
 import java.util.Scanner;
@@ -30,7 +31,10 @@ public class Main {
     for(int turn=1; turn <= 15 && !jackWins; turn++){
       System.out.println("Turn " + turn);
       jackWins = jackMoves(node, in); // Moves Jack, checks to see whether Jack has reached his lair
-      if(!jackWins && turn < 15) printPossLoc(turn); // If Jack hasn't reached his lair by the final turn, constables win
+      if(!jackWins && turn < 15) {
+        printPossLoc(turn); // If Jack hasn't reached his lair by the final turn, constables win
+        conductInvestigations(turn, in);
+      }
     }
     if(!jackWins) System.out.println("No more turns: constables win this round!");
     System.out.println("Thanks for playing!");
@@ -114,5 +118,32 @@ public class Main {
       else System.out.println("Please enter \"Y\" or \"N\"");
     }
     return jackWins;
+  }
+
+  private static void conductInvestigations(int turn, Scanner in) {
+    InvestigationService IService = new InvestigationService();
+    System.out.println("Would you like to investigate a node? (Y/N)");
+    String response = in.nextLine();
+    int invNode;
+    boolean jackWasHere = false;
+
+    boolean passTurn = false;
+    if(response.equalsIgnoreCase("n")) passTurn = true;
+    else if(!response.equalsIgnoreCase("y")) System.out.println("Please enter \"Y\" or \"N\"");
+
+    while (!passTurn) {
+      System.out.println("Which node will you investigate?");
+      invNode = in.nextInt();
+      in.nextLine();
+      jackWasHere = IService.investigate(invNode, turn);
+      if (jackWasHere) System.out.println("A clue was found! Recorded in database.");
+      else System.out.println("No clue found. Recorded in database.");
+
+      System.out.println("Would you like to investigate again? (Y/N)");
+      response = in.nextLine();
+      if(response.equalsIgnoreCase("n")) passTurn = true;
+      else if(!response.equalsIgnoreCase("y")) System.out.println("Please enter \"Y\" or \"N\"");
+    }
+
   }
 }
