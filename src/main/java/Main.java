@@ -9,6 +9,7 @@ public class Main {
   public static void main(String[] args) throws Exception {
 	// should call only the service classes
     Scanner in = new Scanner(System.in);
+
     BoardService boardService = new BoardService();
     boardService.loadDummyDataModerate();
     System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");

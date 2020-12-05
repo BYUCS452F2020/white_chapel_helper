@@ -43,7 +43,7 @@ public class BlockDAO {
     }
 
     //TODO can send the request to the database, but haven't figured out how to parse the answer
-    //public Vector<int> getConnectedLoactions(int city_block){
+    //public Vector<int> getConnectedLocations(int city_block){
     //    try (Session session = driver.session()) {
     //        String dataString = "MATCH (block:City_block {Number:" + city_block + "}) RETURN block.Number";
 

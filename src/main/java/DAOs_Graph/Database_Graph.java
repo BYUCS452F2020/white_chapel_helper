@@ -2,15 +2,19 @@ package DAOs_Graph;
 
 import DAOs.DataAccessException;
 import DAOs.Database;
-import org.neo4j.driver.Driver;
-import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.*;
+
+import java.sql.Connection;
 
 public class Database_Graph implements AutoCloseable {
 
     private Driver driver;
 
     public Driver getDriver() {
-        driver = GraphDatabase.driver("bolt://localhost:7687");
+        if (driver == null) {
+            // I was able to connect to my own local neo4j database using the below format
+            driver = GraphDatabase.driver("bolt://localhost:7687/WhiteChapel_Test", AuthTokens.basic("admin", "admin"));
+        }
         return driver;
     }
 
@@ -32,5 +36,23 @@ public class Database_Graph implements AutoCloseable {
             if(driver != null) {
                 System.out.println("it worked!");
             }
+
+        // Tests the retrieval of node data
+        try (Session session = driver.session()) {
+            String dataString = "MATCH (node:Jack_Location {Number:87}) RETURN node.Clue_Found";
+
+            String answer = session.writeTransaction(new TransactionWork<String>() {
+                @Override
+                public String execute(Transaction transaction) {
+                    Result result = transaction.run(dataString);
+                    return result.single().get(0).asString();
+                }
+            });
+
+            System.out.println(answer);
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
