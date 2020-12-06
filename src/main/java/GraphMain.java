@@ -16,14 +16,14 @@ public class GraphMain {
     System.out.println("                            Welcome to your Letters from White Chapel Assistant                        ");
     System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
 
-//    String game_type = "control";
-//    int node = 0;
-//    boolean jackWins = false;
-//
-////    setGameType(game_type, in);
+    String game_type = "control";
+    int node = 0;
+    boolean jackWins = false;
+
+    setGameType(game_type, in);
 //    setJackStartNode(node, in);
 //    int lair = setJackLair(in);
-//
+
 //    System.out.println("\n");
 //    for(int turn=1; turn <= 15 && !jackWins; turn++){
 //      System.out.println("Turn " + turn);
@@ -35,7 +35,7 @@ public class GraphMain {
 //    }
 //    if(!jackWins) System.out.println("No more turns: constables win this round!\n Thanks for playing");
 //    else{
-//      System.out.println("Thanks for slaying!");
+      System.out.println("Thanks for slaying!");
 //    }
   }
 //
@@ -56,35 +56,35 @@ public class GraphMain {
 //    return node;
 //  }
 //
-//  private static void setGameType(String game_type, Scanner in){
-//    boolean waiting_for_input = true;
-//    System.out.println("Do you want to control Jacks moves, or do you want us to? (Enter CONTROL or AI)");
-//    while(waiting_for_input) {
-//      game_type = in.nextLine();
-//      if(game_type.equalsIgnoreCase("control")) {
-//        System.out.println("You have chosen control");
-//        waiting_for_input = false;
-//      } else {
-//        System.out.println("only control is implemented right now. Try again");
-//      }
-//    }
-//  }
+  private static void setGameType(String game_type, Scanner in){
+    boolean waiting_for_input = true;
+    System.out.println("Do you want to control Jacks moves, or do you want us to? (Enter CONTROL or AI)");
+    while(waiting_for_input) {
+      game_type = in.nextLine();
+      if(game_type.equalsIgnoreCase("control")) {
+        System.out.println("You have chosen control");
+        waiting_for_input = false;
+      } else {
+        System.out.println("only control is implemented right now. Try again");
+      }
+    }
+  }
 //
-//  private static void setJackStartNode(int node, Scanner in){
-//    boolean waiting_for_input = true;
-//    while(waiting_for_input) {
-//      System.out.println("What node does Jack start on?");
-//      String temp = in.nextLine();
-//      try {
-//        node = Integer.parseInt(temp);
-//        JackMoveService jackMoveService = new JackMoveService();
-//        jackMoveService.setJackStartNode(node);
-//        waiting_for_input = false;
-//      }catch(Exception e){
-//        System.out.println("Node " + temp + " does not exist. Try again");
-//      }
-//    }
-//  }
+  private static void setJackStartNode(int node, Scanner in){
+    boolean waiting_for_input = true;
+    while(waiting_for_input) {
+      System.out.println("What node does Jack start on?");
+      String temp = in.nextLine();
+      try {
+        node = Integer.parseInt(temp);
+        LocationService service = new LocationService();
+        service.setJackStartNode(node);
+        waiting_for_input = false;
+      }catch(Exception e){
+        System.out.println("Node " + temp + " does not exist. Try again");
+      }
+    }
+  }
 //
 //  private static boolean jackMoves(int node, Scanner in, int lair){
 //    boolean waiting = true;
