@@ -28,6 +28,27 @@ public class BlockDAO {
         }
     }
 
+    public boolean testBlock(int number){
+        return true;
+    }
+
+    public void deleteBlocks(){
+        try (Session session = driver.session()){
+
+            String dataString = "MATCH (n:City_block) DETACH DELETE n";
+
+            session.writeTransaction(new TransactionWork<String>() {
+                @Override
+                public String execute(Transaction transaction) {
+                    Result result = transaction.run(dataString);
+                    return result.toString();
+                }
+            });
+        }
+    }
+
+
+
     public void addAlleyConnection(int city_block, int node){
         try (Session session = driver.session()) {
             String dataString = "MATCH (a:Block), (b:Location) WHERE a.Number = " + city_block +
