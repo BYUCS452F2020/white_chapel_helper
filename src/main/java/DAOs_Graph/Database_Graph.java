@@ -39,13 +39,14 @@ public class Database_Graph implements AutoCloseable {
 
         // Tests the retrieval of node data
         try (Session session = driver.session()) {
-            String dataString = "MATCH (node:Jack_Location {Number:87}) RETURN node.Has_Clue";
+            String dataString = "MATCH (node:Location) WHERE node.Number = 1 RETURN node.Turn_investigated";
 
             String answer = session.writeTransaction(new TransactionWork<String>() {
                 @Override
                 public String execute(Transaction transaction) {
                     Result result = transaction.run(dataString);
-                    return result.single().get(0).asString();
+                    System.out.println(result.single().get(0).asInt());
+                    return "all done!";
                 }
             });
 
