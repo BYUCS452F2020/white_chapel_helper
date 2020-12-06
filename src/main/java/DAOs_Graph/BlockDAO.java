@@ -16,7 +16,7 @@ public class BlockDAO {
         try (Session session = driver.session()){
 
 
-            String dataString = "CREATE (Block_" + number + ":City_block {Number:" + number + "})";
+            String dataString = "CREATE (:City_block {Number:" + number + "})";
 
             session.writeTransaction(new TransactionWork<String>() {
                 @Override
@@ -30,7 +30,8 @@ public class BlockDAO {
 
     public void addAlleyConnection(int city_block, int node){
         try (Session session = driver.session()) {
-            String dataString = "(Block" + city_block + ")-[:ALLEY]-(Node_" + node + ")";
+            String dataString = "MATCH (a:Block), (b:Location) WHERE a.Number = " + city_block +
+                    " AND b.Number = " + node + " CREATE (a)-[:STREET]->(b)";
 
             session.writeTransaction(new TransactionWork<String>() {
                 @Override
