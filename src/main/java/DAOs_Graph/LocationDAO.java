@@ -101,10 +101,11 @@ public class LocationDAO {
 
     // this function should work (query works in browser)
     public boolean isValidNode(int node){
+        boolean answer;
         try (Session session = driver.session()) {
             String dataString = "MATCH (node:Location) where node.Number = " + node + " return node";
 
-            session.writeTransaction(new TransactionWork<Boolean>() {
+            answer = session.writeTransaction(new TransactionWork<Boolean>() {
                 @Override
                 public Boolean execute(Transaction transaction) {
                     Result result = transaction.run(dataString);
@@ -112,7 +113,7 @@ public class LocationDAO {
                 }
             });
         }
-        return false;
+        return answer;
     }
 
     // this works in browser, will test tomorrow in code (it's late and my connection is weird)
