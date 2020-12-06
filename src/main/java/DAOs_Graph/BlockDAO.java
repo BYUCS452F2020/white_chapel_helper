@@ -63,6 +63,28 @@ public class BlockDAO {
             });
         }
     }
+    
+    public Vector<Integer> getAllConnections(int number){
+        Vector<Integer> return_vector = new Vector<>();
+        try (Session session = driver.session()){
+
+            String dataString = "MATCH (n:City_block {Number:" + number + "})-[:ALLEY]->(results) RETURN results.Number";
+
+            session.writeTransaction(new TransactionWork<String>() {
+                @Override
+                public String execute(Transaction transaction) {
+                    Result result = transaction.run(dataString);
+
+                    while (result.hasNext()){
+                        return_vector.add(result.next().get(0).asInt());
+                        //result.next();
+                    }
+                    return null;
+                }
+            });
+        }
+        return return_vector;
+    }
 
     //TODO can send the request to the database, but haven't figured out how to parse the answer
     //public Vector<int> getConnectedLocations(int city_block){

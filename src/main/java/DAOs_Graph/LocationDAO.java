@@ -65,7 +65,7 @@ public class LocationDAO {
         Vector<Integer> return_vector = new Vector<>();
         try (Session session = driver.session()){
 
-            String dataString = "MATCH (n {Number:" + number + "})-[:STREET]->(results)  RETURN results.Number";
+            String dataString = "MATCH (n:Location {Number:" + number + "})-[:STREET]->(results)  RETURN results.Number";
 
             session.writeTransaction(new TransactionWork<String>() {
                 @Override

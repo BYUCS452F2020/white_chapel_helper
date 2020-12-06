@@ -1,6 +1,8 @@
 package Models_Graph;
 
 
+import org.neo4j.driver.types.Node;
+
 public class Location_Node {
     private final int Number;
     private int Turn_investigated;
