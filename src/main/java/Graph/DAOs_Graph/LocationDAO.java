@@ -23,7 +23,7 @@ public class LocationDAO {
 
         try (Session session = driver.session()){
             String dataString = "CREATE (:Location {Number:" + number + ", Jack_visited:\"No\"," +
-                    " Turn_investigated:0, Clue_found:\"No\"})";
+                    " Turn_investigated:0, Clue_found:\"Not Yet\"})";
 
             session.writeTransaction(transaction -> {
                 Result result = transaction.run(dataString);
@@ -120,12 +120,9 @@ public class LocationDAO {
 
             String dataString = "MATCH (n:Location) WHERE n.Number = " + number + " RETURN n.Jack_visited";
 
-            answer = session.writeTransaction(new TransactionWork<Boolean>() {
-                @Override
-                public Boolean execute(Transaction transaction) {
-                    Result result = transaction.run(dataString);
-                    return result.single().get(0).toString().equals("\"Yes\"");
-                }
+            answer = session.writeTransaction(transaction -> {
+                Result result = transaction.run(dataString);
+                return result.single().get(0).toString().equals("\"Yes\"");
             });
         }
         if (answer){
@@ -134,13 +131,10 @@ public class LocationDAO {
                 String dataString = "MATCH (n:Location) WHERE n.Number = " + number + " SET n.Clue_found = \"Yes\"" +
                         "SET n.Turn_investigated = " + turn;
 
-                session.writeTransaction(new TransactionWork<Boolean>() {
-                    @Override
-                    public Boolean execute(Transaction transaction) {
-                        Result result = transaction.run(dataString);
+                session.writeTransaction(transaction -> {
+                    Result result = transaction.run(dataString);
 
-                        return false;
-                    }
+                    return false;
                 });
             }
         }
@@ -170,8 +164,10 @@ public class LocationDAO {
         List<Integer> returnVector = new ArrayList<>();
         try (Session session = driver.session()){
 
-            String dataString = "MATCH (start:Location {Number: " + start + " })-[ *" + turn + "]-(dest) RETURN DISTINCT dest";
+            String dataString = "MATCH (start:Location {Number: " + start + " })-[ *" + turn + "]-(dest {Clue_found: \"Not Yet\"} ) RETURN DISTINCT dest";
+            listFromResult(returnVector, session, dataString);
 
+            dataString = "MATCH (start:Location {Number: " + start + " })-[ *" + turn + "]-(dest {Clue_found: \"Yes\"}) RETURN DISTINCT dest";
             listFromResult(returnVector, session, dataString);
         }
         return returnVector;

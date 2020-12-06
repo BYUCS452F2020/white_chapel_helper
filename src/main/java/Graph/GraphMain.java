@@ -24,7 +24,6 @@ public class GraphMain {
 
     boolean jackWins = false;
 
-    String gameType = game.setGameType(in);
     game.setJackStartNode(in);
 
     int lair = game.setJackLair(in);

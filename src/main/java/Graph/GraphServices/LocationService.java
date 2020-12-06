@@ -36,17 +36,11 @@ public class LocationService {
   }
 
   public boolean isValidNode(int node){
-//    MATCH (node:Location) where node.Number = 99 return node
     return dao.isValidNode(node);
   }
 
   public Boolean investigate(int node, int turn){
-	return null;
-  }
-
-  // a player has investigated a node, update the PossibleLocations table
-  public void investigatedUpdateTable(Investigation investigation){
-
+	return dao.checkForClue(node, turn);
   }
 
   public List<Integer> getAllLocByTurn(int startNode, int turn){
