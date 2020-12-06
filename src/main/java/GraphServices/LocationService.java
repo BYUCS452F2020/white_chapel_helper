@@ -1,16 +1,19 @@
 package GraphServices;
 
+import DAOs_Graph.LocationDAO;
 import Models.Investigation;
 import Models.Possible_Location;
 
 import java.util.List;
 
 public class LocationService {
+  LocationDAO dao = new LocationDAO();
   public void jackMoves(int destination, String move_type) throws Exception{
+    dao.setJackVisitedTrue(destination);
   }
 
   public void setJackStartNode(int start) throws Exception {
-
+    dao.setJackVisitedTrue(start);
   }
 
   public boolean isValidMove(int starting, int destination, String conn_type){
@@ -18,6 +21,7 @@ public class LocationService {
   }
 
   public boolean isValidNode(int node){
+//    MATCH (node:Location) where node.Number = 99 return node
     return true;
   }
 
@@ -26,7 +30,6 @@ public class LocationService {
   }
 
   public void jackMovedUpdateTable(int turn, String moveType){
-
   }
 
   // a player has investigated a node, update the PossibleLocations table

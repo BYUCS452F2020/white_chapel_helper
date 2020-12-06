@@ -1,7 +1,8 @@
 package DAOs_Graph;
 
-import DAOs.Database;
 import org.neo4j.driver.*;
+
+import java.util.Vector;
 
 public class LocationDAO {
     private Database_Graph ds = new Database_Graph();
@@ -81,6 +82,37 @@ public class LocationDAO {
             });
         }
         return return_vector;
+    }
+
+    public void setJackVisitedTrue(int node){
+        try (Session session = driver.session()) {
+            String dataString = "MATCH (node:Location) " +
+                    "WHERE node.Number = " + node +  " SET node.Jack_visited = true";
+
+            session.writeTransaction(new TransactionWork<String>() {
+                @Override
+                public String execute(Transaction transaction) {
+                    Result result = transaction.run(dataString);
+                    return result.toString();
+                }
+            });
+        }
+    }
+
+    // this function should work (query works in browser)
+    public boolean isValidNode(int node){
+        try (Session session = driver.session()) {
+            String dataString = "MATCH (node:Location) where node.Number = " + node + " return node";
+
+            session.writeTransaction(new TransactionWork<Boolean>() {
+                @Override
+                public Boolean execute(Transaction transaction) {
+                    Result result = transaction.run(dataString);
+                    return result.hasNext();
+                }
+            });
+        }
+        return false;
     }
 }
 
