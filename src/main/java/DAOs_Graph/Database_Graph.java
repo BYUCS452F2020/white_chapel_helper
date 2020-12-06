@@ -21,6 +21,7 @@ public class Database_Graph implements AutoCloseable {
 
     @Override
     public void close() {
+        //TODO test if functions need to manage their own sessions
         try {
             driver.close();
         }

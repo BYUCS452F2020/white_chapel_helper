@@ -1,3 +1,4 @@
+import DAOs_Graph.LocationDAO;
 import Models.Possible_Location;
 import GraphServices.*;
 
@@ -21,7 +22,13 @@ public class GraphMain {
     boolean jackWins = false;
 
     setGameType(game_type, in);
-//    setJackStartNode(node, in);
+    setJackStartNode(node, in);
+
+    //TODO running into problems where service functions seem to erase the DB.
+    // We think this is caused by poor DB management. Either too many databases, drivers, or sessions are being created
+    // Tomorrow I (Joanna) will investigate this
+    // we may need to consolidate DAOs/Services or pass the DB in to these classes
+
 //    int lair = setJackLair(in);
 
 //    System.out.println("\n");
