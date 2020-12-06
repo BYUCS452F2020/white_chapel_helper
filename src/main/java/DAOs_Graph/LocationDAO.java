@@ -18,8 +18,8 @@ public class LocationDAO {
         try (Session session = driver.session()){
 
 
-            String dataString = "CREATE (Node_" + number + ":Location {Number:" + number + ", Jack_visited:No," +
-                    " Turn_investigated:0, Clue_found:No})";
+            String dataString = "CREATE (:Location {Number:" + number + ", Jack_visited:\"No\"," +
+                    " Turn_investigated:0, Clue_found:\"No\"})";
 
             session.writeTransaction(new TransactionWork<String>() {
                 @Override
@@ -33,7 +33,8 @@ public class LocationDAO {
 
     public void addStreetConnection(int node1, int node2){
         try (Session session = driver.session()) {
-            String dataString = "(Node_" + node1 + ")-[:STREET]-(Node_" + node2 + ")";
+            String dataString = "MATCH (a:Location), (b:Location) " +
+                    "WHERE a.Number = " + node1 + " AND b.Number = " + node2 + " CREATE (a)-[:STREET]-> (b)";
 
             session.writeTransaction(new TransactionWork<String>() {
                 @Override
@@ -45,3 +46,4 @@ public class LocationDAO {
         }
     }
 }
+
