@@ -87,7 +87,7 @@ public class LocationDAO {
     public void setJackVisitedTrue(int node){
         try (Session session = driver.session()) {
             String dataString = "MATCH (node:Location) " +
-                    "WHERE node.Number = " + node +  " SET node.Jack_visited = true";
+                    "WHERE node.Number = " + node +  " SET node.Jack_visited = \"Yes\"";
 
             session.writeTransaction(new TransactionWork<String>() {
                 @Override
@@ -104,6 +104,23 @@ public class LocationDAO {
         try (Session session = driver.session()) {
             String dataString = "MATCH (node:Location) where node.Number = " + node + " return node";
 
+            session.writeTransaction(new TransactionWork<Boolean>() {
+                @Override
+                public Boolean execute(Transaction transaction) {
+                    Result result = transaction.run(dataString);
+                    return result.hasNext();
+                }
+            });
+        }
+        return false;
+    }
+
+    // this works in browser, will test tomorrow in code (it's late and my connection is weird)
+    public boolean isValidMove(int start, int destination){
+        try (Session session = driver.session()) {
+            String dataString = "MATCH (n:Location {Number: " + start + " })-[:STREET]->" +
+                    "(results:Location {Number: " + destination + " })  RETURN results.Number";
+            // MATCH (n:Location {Number: 100})-[:STREET]->(results:Location {Number:125})  RETURN results.Number
             session.writeTransaction(new TransactionWork<Boolean>() {
                 @Override
                 public Boolean execute(Transaction transaction) {

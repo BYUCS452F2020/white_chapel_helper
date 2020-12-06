@@ -17,12 +17,12 @@ public class LocationService {
   }
 
   public boolean isValidMove(int starting, int destination, String conn_type){
-	return false;
+	return dao.isValidMove(starting, destination);
   }
 
   public boolean isValidNode(int node){
 //    MATCH (node:Location) where node.Number = 99 return node
-    return true;
+    return dao.isValidNode(node);
   }
 
   public Boolean investigate(int node, int turn){
