@@ -2,18 +2,33 @@ package Graph.GraphServices;
 
 import Graph.DAOs_Graph.LocationDAO;
 import Relational.Models.Investigation;
-import Relational.Models.Possible_Location;
+import org.neo4j.driver.Driver;
 
 import java.util.List;
 
 public class LocationService {
-  LocationDAO dao = new LocationDAO();
-  public void jackMoves(int destination, String move_type) throws Exception{
-    dao.setJackVisitedTrue(destination);
+  private LocationDAO dao;
+  private Driver driver;
+
+  public LocationService(Driver driver) {
+	this.driver = driver;
+	this.dao = new LocationDAO(driver);
+  }
+
+  public void jackMoves(int start, int destination, String move_type) throws Exception{
+    if(dao.isValidMove(start, destination)){
+      dao.setJackVisitedTrue(destination);
+	}else{
+      throw new Exception("Invalid Move");
+	}
   }
 
   public void setJackStartNode(int start) throws Exception {
-    dao.setJackVisitedTrue(start);
+    if(dao.isValidNode(start)) {
+	  dao.setJackVisitedTrue(start);
+	}else{
+      throw new Exception("invalid node");
+	}
   }
 
   public boolean isValidMove(int starting, int destination, String conn_type){
@@ -29,15 +44,12 @@ public class LocationService {
 	return null;
   }
 
-  public void jackMovedUpdateTable(int turn, String moveType){
-  }
-
   // a player has investigated a node, update the PossibleLocations table
   public void investigatedUpdateTable(Investigation investigation){
 
   }
 
-  public List<Possible_Location> getAllLocByTurn(int turn){
-    return null;
+  public List<Integer> getAllLocByTurn(int startNode, int turn){
+    return dao.getAllLocByTurn(startNode, turn);
   }
 }

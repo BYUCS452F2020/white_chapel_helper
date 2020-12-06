@@ -1,12 +1,16 @@
 package Graph.DAOs_Graph;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.neo4j.driver.Driver;
 
 public class BlockDAOTest {
 
-    private BlockDAO dao = new BlockDAO();
-    private LocationDAO loc_dao = new LocationDAO();
+    private final databaseGraph db = new databaseGraph();
+    private final Driver driver = db.getDriver();
+    private final BlockDAO dao = new BlockDAO();
+    private final LocationDAO loc_dao = new LocationDAO(driver);
 
     @BeforeEach
     public void cleanUp() {
@@ -30,6 +34,7 @@ public class BlockDAOTest {
         dao.addAlleyConnection(2, 5);
 
         System.out.println(dao.getAllConnections(1));
+        Assertions.assertTrue(true);
     }
 }
 

@@ -1,12 +1,17 @@
 package Graph.DAOs_Graph;
 
 import org.neo4j.driver.*;
+import org.neo4j.driver.exceptions.NoSuchRecordException;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LocationDAO {
-    private Database_Graph ds = new Database_Graph();
-    private Driver driver = ds.getDriver();
+    private Driver driver;
+
+    public LocationDAO(Driver driver) {
+        this.driver = driver;
+    }
 
     // this creates a location Node. these are the Nodes found on the board each with a given number.
     // the number of the location is inputted as part of this function. the Location Node has values for:
@@ -17,17 +22,12 @@ public class LocationDAO {
     public void addNode(int number){
 
         try (Session session = driver.session()){
-
-
             String dataString = "CREATE (:Location {Number:" + number + ", Jack_visited:\"No\"," +
                     " Turn_investigated:0, Clue_found:\"No\"})";
 
-            session.writeTransaction(new TransactionWork<String>() {
-                @Override
-                public String execute(Transaction transaction) {
-                    Result result = transaction.run(dataString);
-                    return result.toString();
-                }
+            session.writeTransaction(transaction -> {
+                Result result = transaction.run(dataString);
+                return result.toString();
             });
         }
     }
@@ -37,12 +37,9 @@ public class LocationDAO {
             String dataString = "MATCH (a:Location), (b:Location) " +
                     "WHERE a.Number = " + node1 + " AND b.Number = " + node2 + " CREATE (a)-[:STREET]-> (b)";
 
-            session.writeTransaction(new TransactionWork<String>() {
-                @Override
-                public String execute(Transaction transaction) {
-                    Result result = transaction.run(dataString);
-                    return result.toString();
-                }
+            session.writeTransaction(transaction -> {
+                Result result = transaction.run(dataString);
+                return result.toString();
             });
         }
     }
@@ -52,36 +49,22 @@ public class LocationDAO {
 
             String dataString = "MATCH (n:Location) DETACH DELETE n";
 
-            session.writeTransaction(new TransactionWork<String>() {
-                @Override
-                public String execute(Transaction transaction) {
-                    Result result = transaction.run(dataString);
-                    return result.toString();
-                }
+            session.writeTransaction(transaction -> {
+                Result result = transaction.run(dataString);
+                return result.toString();
             });
         }
     }
     
-    public Vector<Integer> getAllConnections(int number){
-        Vector<Integer> return_vector = new Vector<>();
+    public List<Integer> getAllConnections(int number){
+        List<Integer> returnVector = new ArrayList<>();
         try (Session session = driver.session()){
 
             String dataString = "MATCH (n:Location {Number:" + number + "})-[:STREET]->(results)  RETURN results.Number";
 
-            session.writeTransaction(new TransactionWork<String>() {
-                @Override
-                public String execute(Transaction transaction) {
-                    Result result = transaction.run(dataString);
-
-                    while (result.hasNext()){
-                        return_vector.add(result.next().get(0).asInt());
-                        //result.next();
-                    }
-                    return null;
-                }
-            });
+            listFromResult(returnVector, session, dataString);
         }
-        return return_vector;
+        return returnVector;
     }
 
     public void setJackVisitedTrue(int node){
@@ -105,12 +88,9 @@ public class LocationDAO {
         try (Session session = driver.session()) {
             String dataString = "MATCH (node:Location) where node.Number = " + node + " return node";
 
-            answer = session.writeTransaction(new TransactionWork<Boolean>() {
-                @Override
-                public Boolean execute(Transaction transaction) {
-                    Result result = transaction.run(dataString);
-                    return result.hasNext();
-                }
+            answer = session.writeTransaction(transaction -> {
+                Result result = transaction.run(dataString);
+                return result.hasNext();
             });
         }
         return answer;
@@ -119,18 +99,19 @@ public class LocationDAO {
     // this works in browser, will test tomorrow in code (it's late and my connection is weird)
     public boolean isValidMove(int start, int destination) {
         try(Session session = driver.session()) {
-            String dataString = "MATCH (n:Location {Number: " + start + " })-[:STREET]->" +
+            String dataString = "MATCH (n:Location {Number: " + start + " })-[:STREET]-" +
                     "(results:Location {Number: " + destination + " })  RETURN results.Number";
             // MATCH (n:Location {Number: 100})-[:STREET]->(results:Location {Number:125})  RETURN results.Number
-            session.writeTransaction(new TransactionWork<Boolean>() {
-                @Override
-                public Boolean execute(Transaction transaction) {
-                    Result result = transaction.run(dataString);
-                    return result.hasNext();
+            return session.writeTransaction(transaction -> {
+                Result result = transaction.run(dataString);
+                try {
+                    int num = result.next().get(0).asInt();
+                    return true;
+                }catch(NoSuchRecordException e){
+                    return false;
                 }
             });
         }
-        return false;
     }
 
     public boolean checkForClue(int number, int turn){
@@ -143,10 +124,7 @@ public class LocationDAO {
                 @Override
                 public Boolean execute(Transaction transaction) {
                     Result result = transaction.run(dataString);
-                    if (result.single().get(0).toString().equals("\"Yes\"")){
-                        return true;
-                    }
-                    return false;
+                    return result.single().get(0).toString().equals("\"Yes\"");
                 }
             });
         }
@@ -186,6 +164,28 @@ public class LocationDAO {
                 }
             });
         }
+    }
+
+    public List<Integer> getAllLocByTurn(int start, int turn){
+        List<Integer> returnVector = new ArrayList<>();
+        try (Session session = driver.session()){
+
+            String dataString = "MATCH (start:Location {Number: " + start + " })-[ *" + turn + "]-(dest) RETURN DISTINCT dest";
+
+            listFromResult(returnVector, session, dataString);
+        }
+        return returnVector;
+    }
+
+    private void listFromResult(List<Integer> returnList, Session session, String dataString) {
+        session.writeTransaction((TransactionWork<String>) transaction -> {
+            Result result = transaction.run(dataString);
+
+            while (result.hasNext()){
+                returnList.add(result.next().get(0).get("Number").asInt());
+            }
+            return null;
+        });
     }
 }
 

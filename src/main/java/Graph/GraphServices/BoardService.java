@@ -1,25 +1,23 @@
 package Graph.GraphServices;
 
-import Relational.DAOs.DataAccessException;
-import Graph.DAOs_Graph.Database_Graph;
 import Graph.DAOs_Graph.LocationDAO;
 import Relational.Models.Connection;
+import org.neo4j.driver.Driver;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
 public class BoardService {
+  Driver driver;
 
-  //loads very simple map into DB, ~10 nodes
-  public void loadDummyDataSimple(){
-    //TODO
+  public BoardService(Driver driver) {
+    this.driver = driver;
   }
 
   //loads medium-sized map into DB, 1 neighborhood of game board
   public void loadDummyDataModerate() throws Exception {
-    clearDB(); // Clear Nodes to avoid duplication
-    LocationDAO dao = new LocationDAO();
+    LocationDAO dao = new LocationDAO(driver);
     List<Connection> map = Arrays.asList(
             new Connection(120,99, "STREET"),
             new Connection(120,100, "STREET"),
@@ -272,13 +270,4 @@ public class BoardService {
     }
   }
 
-  //loads full white chapel map into DB
-  public void loadData(){
-    //TODO
-  }
-
-  private void clearDB() throws DataAccessException {
-    Database_Graph db = new Database_Graph();
-    db.clear_graph();
-  }
 }
