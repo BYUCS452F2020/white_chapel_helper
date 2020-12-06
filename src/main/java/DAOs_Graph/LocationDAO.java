@@ -114,5 +114,60 @@ public class LocationDAO {
         }
         return false;
     }
+    
+    public boolean checkForClue(int number, int turn){
+        boolean answer;
+        try (Session session = driver.session()){
+
+            String dataString = "MATCH (n:Location) WHERE n.Number = " + number + " RETURN n.Jack_visited";
+
+            answer = session.writeTransaction(new TransactionWork<Boolean>() {
+                @Override
+                public Boolean execute(Transaction transaction) {
+                    Result result = transaction.run(dataString);
+                    if (result.single().get(0).toString().equals("\"Yes\"")){
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
+        if (answer){
+            try (Session session = driver.session()){
+
+                String dataString = "MATCH (n:Location) WHERE n.Number = " + number + " SET n.Clue_found = \"Yes\"" +
+                        "SET n.Turn_investigated = " + turn;
+
+                session.writeTransaction(new TransactionWork<Boolean>() {
+                    @Override
+                    public Boolean execute(Transaction transaction) {
+                        Result result = transaction.run(dataString);
+
+                        return false;
+                    }
+                });
+            }
+        }
+
+        return  answer;
+    }
+
+    public boolean hasClue(int number){
+        try (Session session = driver.session()){
+
+            String dataString = "MATCH (n:Location) WHERE n.Number = " + number + " RETURN n.Clue_found";
+
+            return session.writeTransaction(new TransactionWork<Boolean>() {
+                @Override
+                public Boolean execute(Transaction transaction) {
+                    Result result = transaction.run(dataString);
+                    if (result.single().get(0).toString().equals("\"Yes\"")){
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
+    }
 }
 
