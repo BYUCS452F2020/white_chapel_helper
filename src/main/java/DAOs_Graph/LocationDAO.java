@@ -45,5 +45,20 @@ public class LocationDAO {
             });
         }
     }
+
+    public void deleteLocations(){
+        try (Session session = driver.session()){
+
+            String dataString = "MATCH (n:Location) DETACH DELETE n";
+
+            session.writeTransaction(new TransactionWork<String>() {
+                @Override
+                public String execute(Transaction transaction) {
+                    Result result = transaction.run(dataString);
+                    return result.toString();
+                }
+            });
+        }
+    }
 }
 
