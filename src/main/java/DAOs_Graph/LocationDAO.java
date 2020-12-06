@@ -60,5 +60,27 @@ public class LocationDAO {
             });
         }
     }
+    
+    public Vector<Integer> getAllConnections(int number){
+        Vector<Integer> return_vector = new Vector<>();
+        try (Session session = driver.session()){
+
+            String dataString = "MATCH (n {Number:" + number + "})-[:STREET]->(results)  RETURN results.Number";
+
+            session.writeTransaction(new TransactionWork<String>() {
+                @Override
+                public String execute(Transaction transaction) {
+                    Result result = transaction.run(dataString);
+
+                    while (result.hasNext()){
+                        return_vector.add(result.next().get(0).asInt());
+                        //result.next();
+                    }
+                    return null;
+                }
+            });
+        }
+        return return_vector;
+    }
 }
 
