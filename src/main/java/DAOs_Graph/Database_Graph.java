@@ -29,6 +29,42 @@ public class Database_Graph implements AutoCloseable {
         }
     }
 
+    public void clear_graph() {
+        Database_Graph db = new Database_Graph();
+
+        Driver driver = db.getDriver();
+        try (Session session = driver.session()){
+            String dataString = "MATCH (n) DETACH DELETE n";
+
+            session.writeTransaction(new TransactionWork<String>() {
+                @Override
+                public String execute(Transaction transaction) {
+                    Result result = transaction.run(dataString);
+                    return result.toString();
+                }
+            });
+        }
+
+    }
+
+    public void addNode(int number){
+
+        try (Session session = driver.session()){
+
+
+            String dataString = "CREATE (:Location {Number:" + number + ", Jack_visited:\"No\"," +
+                    " Turn_investigated:0, Clue_found:\"No\"})";
+
+            session.writeTransaction(new TransactionWork<String>() {
+                @Override
+                public String execute(Transaction transaction) {
+                    Result result = transaction.run(dataString);
+                    return result.toString();
+                }
+            });
+        }
+    }
+
     //to test the database
     public static void main(String[] args){
         Database_Graph db = new Database_Graph();
@@ -42,7 +78,7 @@ public class Database_Graph implements AutoCloseable {
         // Tests the retrieval of node data
         try (Session session = driver.session()) {
             //String dataString = "MATCH (node:Location) WHERE node.Number = 1 RETURN node.Turn_investigated";
-            String dataString = "MATCH (node:Location) WHERE node.Number = 2 RETURN node.Number";//, node.Turn_Investigated, node.Clue_Found, node.Jack_Is_Here";
+            String dataString = "MATCH (node:Jack_Location) WHERE node.Number = 87 RETURN node.Number";//, node.Turn_Investigated, node.Clue_Found, node.Jack_Is_Here";
 
             Double result = session.writeTransaction(new TransactionWork<Double>() {
                 @Override

@@ -3,10 +3,13 @@ package GraphServices;
 import DAOs.ConnectionDAO;
 import DAOs.DataAccessException;
 import DAOs.Database;
+import DAOs_Graph.Database_Graph;
 import DAOs_Graph.LocationDAO;
 import Models.Connection;
+import org.neo4j.driver.Driver;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class BoardService {
@@ -18,7 +21,7 @@ public class BoardService {
 
   //loads medium-sized map into DB, 1 neighborhood of game board
   public void loadDummyDataModerate() throws Exception {
-//    clearDB();
+    clearDB(); // Clear Nodes to avoid duplication
     LocationDAO dao = new LocationDAO();
     List<Connection> map = Arrays.asList(
             new Connection(120,99, "STREET"),
@@ -258,8 +261,14 @@ public class BoardService {
 
             new Connection(110,111, "STREET"));
 //    System.out.println("loading " + map.size() + " connections into DB");
-    for(Connection temp: map){
-      dao.addNode(temp.getFrom_node());
+
+    // Set is to prevent duplicate nodes from being added.
+    HashSet<Integer> nodesToInsert = new HashSet<>();
+    for(Connection tempCon: map){
+      nodesToInsert.add(tempCon.getFrom_node());
+    }
+    for(Integer node_num: nodesToInsert){
+      dao.addNode(node_num);
     }
     for(Connection temp: map){
       dao.addStreetConnection(temp.getFrom_node(), temp.getTo_node());
@@ -271,10 +280,8 @@ public class BoardService {
     //TODO
   }
 
-//  private void clearDB() throws DataAccessException {
-//    Database db = new Database();
-//    db.getConnection();
-//    db.clearTables();
-//    db.closeConnection(true);
-//  }
+  private void clearDB() throws DataAccessException {
+    Database_Graph db = new Database_Graph();
+    db.clear_graph();
+  }
 }
