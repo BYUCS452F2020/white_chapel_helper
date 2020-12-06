@@ -28,6 +28,7 @@ public class GraphMain {
     // We think this is caused by poor DB management. Either too many databases, drivers, or sessions are being created
     // Tomorrow I (Joanna) will investigate this
     // we may need to consolidate DAOs/Services or pass the DB in to these classes
+    // we think services are obsolete bc honestly our dao are so much better (no need weird normalization)
 
 //    int lair = setJackLair(in);
 
