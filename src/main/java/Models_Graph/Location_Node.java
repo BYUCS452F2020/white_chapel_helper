@@ -8,19 +8,22 @@ public class Location_Node {
     private int Turn_Investigated;
     private boolean Clue_Found;
     private boolean Jack_Is_Here;
+    private boolean Jack_Could_Be_Here;
 
     public Location_Node(int number) {
         Number = number;
         Turn_Investigated = 0;
         Clue_Found = false;
         Jack_Is_Here = false;
+        Jack_Could_Be_Here = false;
     }
 
-    public Location_Node(int number, int TI, boolean CF, boolean JIH) {
+    public Location_Node(int number, int TI, boolean CF, boolean JIH, boolean JCBH) {
         Number = number;
         Turn_Investigated = TI;
         Clue_Found = CF;
         Jack_Is_Here = JIH;
+        Jack_Could_Be_Here = JCBH;
     }
 
     public int getNumber() {
